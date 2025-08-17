@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Simanta's Artwork</title>
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+            user-select: none;
+
+        }
+
+        
+
+        body {
+
+            font-family: 'Arial', sans-serif;
+
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+
+            min-height: 100vh;
+
+            overflow-x: hidden;
+
+        }
+
+        
+
+        .container {
+
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            padding: 20px;
+
+        }
+
+        
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 40px;
+
+            color: white;
+
+        }
+
+        
+
+        .header h1 {
+
+            font-size: 3rem;
+
+            margin-bottom: 10px;
+
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+
+            animation: glow 2s ease-in-out infinite alternate;
+
+        }
+
+        
+
+        @keyframes glow {
+
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+
+            to { text-shadow: 2px 2px 20px rgba(255,255,255,0.5); }
+
+        }
+
+        
+
+        .games-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+            gap: 30px;
+
+            margin-bottom: 40px;
+
+        }
+
+        
+
+        .game-card {
+
+            background: rgba(255, 255, 255, 0.1);
+
+            backdrop-filter: blur(10px);
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+            transition: all 0.3s ease;
+
+            cursor: pointer;
+
+        }
+
+        
+
+        .game-card:hover {
+
+            transform: translateY(-10px);
+
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+
+            background: rgba(255, 255, 255, 0.15);
+
+        }
+
+        
+
+        .game-card h3 {
+
+            color: white;
+
+            margin-bottom: 15px;
+
+            font-size: 1.5rem;
+
+        }
+
+        
+
+        .game-card p {
+
+            color: rgba(255, 255, 255, 0.8);
+
+            margin-bottom: 20px;
+
+            line-height: 1.6;
+
+        }
+
+        
+
+        .play-btn {
+
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+
+            border: none;
+
+            padding: 12px 30px;
+
+            border-radius: 25px;
+
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+
+            width: 100%;
+
+        }
+
+        
+
+        .play-btn:hover {
+
+            transform: scale(1.05);
+
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+
+        }
+
+        
+
+        .game-screen {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background: #000;
+
+            z-index: 1000;
+
+            display: none;
+
+            flex-direction: column;
+
+        }
+
+        
+
+        .game-header {
+
+            background: rgba(0, 0, 0, 0.8);
+
+            padding: 15px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            color: white;
+
+        }
+
+        
+
+        .back-btn {
+
+            background: #ff6b6b;
+
+            border: none;
+
+            padding: 8px 16px;
+
+            border-radius: 15px;
+
+            color: white;
+
+            cursor: pointer;
+
+        }
+
+        
+
+        .game-canvas {
+
+            flex: 1;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            position: relative;
+
+        }
+
+        
+
+        canvas {
+
+            border: 2px solid #333;
+
+            max-width: 100%;
+
+            max-height: 100%;
+
+        }
+
+        
+
+        .controls {
+
+            position: absolute;
+
+            bottom: 20px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+        }
+
+        
+
+        .control-btn {
+
+            background: rgba(255, 255, 255, 0.2);
+
+            border: none;
+
+            padding: 15px;
+
+            border-radius: 50%;
+
+            color: white;
+
+            font-size: 18px;
+
+            cursor: pointer;
+
+            touch-action: manipulation;
+
+        }
+
+        
+
+        .upload-area {
+
+            border: 2px dashed #ccc;
+
+            padding: 40px;
+
+            text-align: center;
+
+            color: white;
+
+            border-radius: 10px;
+
+            margin: 20px 0;
+
+            cursor: pointer;
+
+        }
+
+        
+
+        .upload-area:hover {
+
+            border-color: #ff6b6b;
+
+        }
+
+        
+
+        .chess-board {
+
+            display: grid;
+
+            grid-template-columns: repeat(8, 50px);
+
+            grid-template-rows: repeat(8, 50px);
+
+            gap: 0;
+
+            border: 2px solid #8B4513;
+
+            margin: 20px auto;
+
+        }
+
+        
+
+        .chess-square {
+
+            width: 50px;
+
+            height: 50px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 35px;
+
+            cursor: pointer;
+
+            transition: all 0.2s;
+
+        }
+
+        
+
+        .chess-square.white {
+
+            background: #f0d9b5;
+
+        }
+
+        
+
+        .chess-square.black {
+
+            background: #b58863;
+
+        }
+
+        
+
+        .chess-square.selected {
+
+            background: #ff6b6b !important;
+
+        }
+
+        
+
+        .chess-square.possible-move {
+
+            background: #90EE90 !important;
+
+        }
+
+        
+
+        .game-info {
+
+            color: white;
+
+            text-align: center;
+
+            padding: 20px;
+
+            font-size: 18px;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+
+            <h1>🎨 Simanta's Artwork</h1>
+
+            <p>Premium Game Collection</p>
+
+        </div>
+
+        
+
+        <div class="games-grid">
+
+            <div class="game-card" onclick="openGame('snake')">
+
+                <h3>🐍 Swipe Snake</h3>
+
+                <p>Classic snake game with mobile swipe controls. Eat food, grow longer, avoid walls!</p>
+
+                <button class="play-btn">Play Snake</button>
+
+            </div>
+
+            
+
+            <div class="game-card" onclick="openGame('minecraft')">
+
+                <h3>⛏️ Block Craft 3D</h3>
+
+                <p>Build and destroy blocks in a 3D world. Create your own minecraft-style structures!</p>
+
+                <button class="play-btn">Enter World</button>
+
+            </div>
+
+            
+
+            <div class="game-card" onclick="openGame('balls')">
+
+                <h3>🏀 Gravity Balls</h3>
+
+                <p>Touch to create balls and control gravity. Watch physics come alive!</p>
+
+                <button class="play-btn">Create Balls</button>
+
+            </div>
+
+            
+
+            <div class="game-card" onclick="openGame('dominos')">
+
+                <h3>🎲 Photo Dominos</h3>
+
+                <p>Upload a photo and watch it transform into falling dominos!</p>
+
+                <button class="play-btn">Upload Photo</button>
+
+            </div>
+
+            
+
+            <div class="game-card" onclick="openGame('chess')">
+
+                <h3>♛ AI Chess Master</h3>
+
+                <p>Play chess against AI with check/checkmate detection. Test your strategy!</p>
+
+                <button class="play-btn">Challenge AI</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Snake Game -->
+
+    <div class="game-screen" id="snake-game">
+
+        <div class="game-header">
+
+            <button class="back-btn" onclick="closeGame()">← Back</button>
+
+            <h2>🐍 Swipe Snake</h2>
+
+            <div>Score: <span id="snake-score">0</span></div>
+
+        </div>
+
+        <div class="game-canvas">
+
+            <canvas id="snake-canvas" width="400" height="400"></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- Minecraft Game -->
+
+    <div class="game-screen" id="minecraft-game">
+
+        <div class="game-header">
+
+            <button class="back-btn" onclick="closeGame()">← Back</button>
+
+            <h2>⛏️ Block Craft 3D</h2>
+
+            <div>Click to place/remove blocks</div>
+
+        </div>
+
+        <div class="game-canvas">
+
+            <canvas id="minecraft-canvas" width="800" height="600"></canvas>
+
+            <div class="controls">
+
+                <button class="control-btn" onclick="changeBlock('grass')">🟩</button>
+
+                <button class="control-btn" onclick="changeBlock('stone')">⬜</button>
+
+                <button class="control-btn" onclick="changeBlock('wood')">🟫</button>
+
+                <button class="control-btn" onclick="changeBlock('dirt')">🟤</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Balls Game -->
+
+    <div class="game-screen" id="balls-game">
+
+        <div class="game-header">
+
+            <button class="back-btn" onclick="closeGame()">← Back</button>
+
+            <h2>🏀 Gravity Balls</h2>
+
+            <div>Touch to create balls, swipe to change gravity</div>
+
+        </div>
+
+        <div class="game-canvas">
+
+            <canvas id="balls-canvas" width="800" height="600"></canvas>
+
+            <div class="controls">
+
+                <button class="control-btn" onclick="changeGravity('up')">⬆️</button>
+
+                <button class="control-btn" onclick="changeGravity('down')">⬇️</button>
+
+                <button class="control-btn" onclick="changeGravity('left')">⬅️</button>
+
+                <button class="control-btn" onclick="changeGravity('right')">➡️</button>
+
+                <button class="control-btn" onclick="clearBalls()">🗑️</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Dominos Game -->
+
+    <div class="game-screen" id="dominos-game">
+
+        <div class="game-header">
+
+            <button class="back-btn" onclick="closeGame()">← Back</button>
+
+            <h2>🎲 Photo Dominos</h2>
+
+            <div>Upload photo and watch dominos fall</div>
+
+        </div>
+
+        <div class="game-canvas">
+
+            <div class="upload-area" id="upload-area" onclick="document.getElementById('photo-input').click()">
+
+                <p>📸 Click to Upload Photo</p>
+
+                <p>Image will be converted to falling dominos!</p>
+
+            </div>
+
+            <input type="file" id="photo-input" accept="image/*" style="display: none;">
+
+            <canvas id="dominos-canvas" width="800" height="600" style="display: none;"></canvas>
+
+            <div class="controls">
+
+                <button class="control-btn" onclick="startDominoFall()" id="domino-btn" style="display: none;">🎲 Start Fall</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Chess Game -->
+
+    <div class="game-screen" id="chess-game">
+
+        <div class="game-header">
+
+            <button class="back-btn" onclick="closeGame()">← Back</button>
+
+            <h2>♛ AI Chess Master</h2>
+
+            <div id="chess-status">Your turn - White to move</div>
+
+        </div>
+
+        <div class="game-canvas">
+
+            <div class="chess-board" id="chess-board"></div>
+
+            <div class="game-info">
+
+                <p>Click a piece to select, then click destination to move</p>
+
+                <div id="game-result"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        // Game Management
+
+        function openGame(gameType) {
+
+            document.getElementById(gameType + '-game').style.display = 'flex';
+
+            initGame(gameType);
+
+        }
+
+        function closeGame() {
+
+            document.querySelectorAll('.game-screen').forEach(screen => {
+
+                screen.style.display = 'none';
+
+            });
+
+        }
+
+        function initGame(gameType) {
+
+            switch(gameType) {
+
+                case 'snake': initSnake(); break;
+
+                case 'minecraft': initMinecraft(); break;
+
+                case 'balls': initBalls(); break;
+
+                case 'dominos': initDominos(); break;
+
+                case 'chess': initChess(); break;
+
+            }
+
+        }
+
+        // Snake Game
+
+        let snake, food, direction, gameLoop, score;
+
+        function initSnake() {
+
+            const canvas = document.getElementById('snake-canvas');
+
+            const ctx = canvas.getContext('2d');
+
+            const gridSize = 20;
+
+            
+
+            snake = [{x: 200, y: 200}];
+
+            food = {x: 100, y: 100};
+
+            direction = {x: 0, y: 0};
+
+            score = 0;
+
+            
+
+            document.getElementById('snake-score').textContent = score;
+
+            
+
+            // Touch controls for mobile
+
+            let touchStartX, touchStartY;
+
+            
+
+            canvas.addEventListener('touchstart', (e) => {
+
+                touchStartX = e.touches[0].clientX;
+
+                touchStartY = e.touches[0].clientY;
+
+                e.preventDefault();
+
+            });
+
+            
+
+            canvas.addEventListener('touchend', (e) => {
+
+                if (!touchStartX || !touchStartY) return;
+
+                
+
+                let touchEndX = e.changedTouches[0].clientX;
+
+                let touchEndY = e.changedTouches[0].clientY;
+
+                
+
+                let dx = touchEndX - touchStartX;
+
+                let dy = touchEndY - touchStartY;
+
+                
+
+                if (Math.abs(dx) > Math.abs(dy)) {
+
+                    direction = dx > 0 ? {x: gridSize, y: 0} : {x: -gridSize, y: 0};
+
+                } else {
+
+                    direction = dy > 0 ? {x: 0, y: gridSize} : {x: 0, y: -gridSize};
+
+                }
+
+                e.preventDefault();
+
+            });
+
+            
+
+            // Keyboard controls
+
+            document.addEventListener('keydown', (e) => {
+
+                switch(e.key) {
+
+                    case 'ArrowUp': direction = {x: 0, y: -gridSize}; break;
+
+                    case 'ArrowDown': direction = {x: 0, y: gridSize}; break;
+
+                    case 'ArrowLeft': direction = {x: -gridSize, y: 0}; break;
+
+                    case 'ArrowRight': direction = {x: gridSize, y: 0}; break;
+
+                }
+
+            });
+
+            
+
+            gameLoop = setInterval(() => updateSnake(ctx, canvas, gridSize), 200);
+
+        }
+
+        function updateSnake(ctx, canvas, gridSize) {
+
+            if (direction.x === 0 && direction.y === 0) return;
+
+            
+
+            const head = {x: snake[0].x + direction.x, y: snake[0].y + direction.y};
+
+            
+
+            // Check walls
+
+            if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+
+                clearInterval(gameLoop);
+
+                alert('Game Over! Score: ' + score);
+
+                return;
+
+            }
+
+            
+
+            // Check self collision
+
+            if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+
+                clearInterval(gameLoop);
+
+                alert('Game Over! Score: ' + score);
+
+                return;
+
+            }
+
+            
+
+            snake.unshift(head);
+
+            
+
+            // Check food
+
+            if (head.x === food.x && head.y === food.y) {
+
+                score++;
+
+                document.getElementById('snake-score').textContent = score;
+
+                food = {
+
+                    x: Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize,
+
+                    y: Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize
+
+                };
+
+            } else {
+
+                snake.pop();
+
+            }
+
+            
+
+            drawSnake(ctx, canvas, gridSize);
+
+        }
+
+        function drawSnake(ctx, canvas, gridSize) {
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            
+
+            // Draw snake
+
+            ctx.fillStyle = '#4CAF50';
+
+            snake.forEach(segment => {
+
+                ctx.fillRect(segment.x, segment.y, gridSize - 2, gridSize - 2);
+
+            });
+
+            
+
+            // Draw food
+
+            ctx.fillStyle = '#FF5722';
+
+            ctx.fillRect(food.x, food.y, gridSize - 2, gridSize - 2);
+
+        }
+
+        // Minecraft Game
+
+        let minecraftBlocks = {};
+
+        let currentBlock = 'grass';
+
+        function initMinecraft() {
+
+            const canvas = document.getElementById('minecraft-canvas');
+
+            const ctx = canvas.getContext('2d');
+
+            
+
+            canvas.addEventListener('click', (e) => {
+
+                const rect = canvas.getBoundingClientRect();
+
+                const x = Math.floor((e.clientX - rect.left) / 50);
+
+                const y = Math.floor((e.clientY - rect.top) / 50);
+
+                const key = x + ',' + y;
+
+                
+
+                if (minecraftBlocks[key]) {
+
+                    delete minecraftBlocks[key];
+
+                } else {
+
+                    minecraftBlocks[key] = currentBlock;
+
+                }
+
+                
+
+                drawMinecraft(ctx, canvas);
+
+            });
+
+            
+
+            drawMinecraft(ctx, canvas);
+
+        }
+
+        function changeBlock(type) {
+
+            currentBlock = type;
+
+        }
+
+        function drawMinecraft(ctx, canvas) {
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            
+
+            // Draw grid
+
+            ctx.strokeStyle = '#333';
+
+            for (let x = 0; x < canvas.width; x += 50) {
+
+                ctx.beginPath();
+
+                ctx.moveTo(x, 0);
+
+                ctx.lineTo(x, canvas.height);
+
+                ctx.stroke();
+
+            }
+
+            for (let y = 0; y < canvas.height; y += 50) {
+
+                ctx.beginPath();
+
+                ctx.moveTo(0, y);
+
+                ctx.lineTo(canvas.width, y);
+
+                ctx.stroke();
+
+            }
+
+            
+
+            // Draw blocks
+
+            Object.entries(minecraftBlocks).forEach(([key, type]) => {
+
+                const [x, y] = key.split(',').map(Number);
+
+                const colors = {
+
+                    grass: '#4CAF50',
+
+                    stone: '#9E9E9E',
+
+                    wood: '#8D6E63',
+
+                    dirt: '#795548'
+
+                };
+
+                ctx.fillStyle = colors[type];
+
+                ctx.fillRect(x * 50 + 1, y * 50 + 1, 48, 48);
+
+            });
+
+        }
+
+        // Balls Game
+
+        let balls = [];
+
+        let gravity = {x: 0, y: 0.5};
+
+        function initBalls() {
+
+            const canvas = document.getElementById('balls-canvas');
+
+            const ctx = canvas.getContext('2d');
+
+            
+
+            canvas.addEventListener('click', (e) => {
+
+                const rect = canvas.getBoundingClientRect();
+
+                const x = e.clientX - rect.left;
+
+                const y = e.clientY - rect.top;
+
+                
+
+                balls.push({
+
+                    x: x,
+
+                    y: y,
+
+                    vx: (Math.random() - 0.5) * 10,
+
+                    vy: (Math.random() - 0.5) * 10,
+
+                    radius: Math.random() * 20 + 10,
+
+                    color: `hsl(${Math.random() * 360}, 70%, 60%)`
+
+                });
+
+            });
+
+            
+
+            function animate() {
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                
+
+                balls.forEach((ball, index) => {
+
+                    ball.vx += gravity.x;
+
+                    ball.vy += gravity.y;
+
+                    ball.x += ball.vx;
+
+                    ball.y += ball.vy;
+
+                    
+
+                    // Bounce off walls
+
+                    if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
+
+                        ball.vx *= -0.8;
+
+                        ball.x = Math.max(ball.radius, Math.min(canvas.width - ball.radius, ball.x));
+
+                    }
+
+                    if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+
+                        ball.vy *= -0.8;
+
+                        ball.y = Math.max(ball.radius, Math.min(canvas.height - ball.radius, ball.y));
+
+                    }
+
+                    
+
+                    // Draw ball
+
+                    ctx.beginPath();
+
+                    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+
+                    ctx.fillStyle = ball.color;
+
+                    ctx.fill();
+
+                });
+
+                
+
+                requestAnimationFrame(animate);
+
+            }
+
+            
+
+            animate();
+
+        }
+
+        function changeGravity(dir) {
+
+            switch(dir) {
+
+                case 'up': gravity = {x: 0, y: -0.5}; break;
+
+                case 'down': gravity = {x: 0, y: 0.5}; break;
+
+                case 'left': gravity = {x: -0.5, y: 0}; break;
+
+                case 'right': gravity = {x: 0.5, y: 0}; break;
+
+            }
+
+        }
+
+        function clearBalls() {
+
+            balls = [];
+
+        }
+
+        // Dominos Game
+
+        let dominos = [];
+
+        function initDominos() {
+
+            document.getElementById('photo-input').addEventListener('change', handlePhotoUpload);
+
+        }
+
+        function handlePhotoUpload(e) {
+
+            const file = e.target.files[0];
+
+            if (!file) return;
+
+            
+
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+
+                const img = new Image();
+
+                img.onload = () => {
+
+                    createDominos(img);
+
+                };
+
+                img.src = e.target.result;
+
+            };
+
+            reader.readAsDataURL(file);
+
+        }
+
+        function createDominos(img) {
+
+            const canvas = document.getElementById('dominos-canvas');
+
+            const ctx = canvas.getContext('2d');
+
+            
+
+            canvas.style.display = 'block';
+
+            document.getElementById('upload-area').style.display = 'none';
+
+            document.getElementById('domino-btn').style.display = 'block';
+
+            
+
+            // Scale image to fit canvas
+
+            const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+
+            const scaledWidth = img.width * scale;
+
+            const scaledHeight = img.height * scale;
+
+            
+
+            ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+
+            
+
+            // Create dominos based on image
+
+            dominos = [];
+
+            const spacing = 20;
+
+            
+
+            for (let x = 0; x < scaledWidth; x += spacing) {
+
+                for (let y = 0; y < scaledHeight; y += spacing) {
+
+                    const imageData = ctx.getImageData(x, y, 1, 1);
+
+                    const [r, g, b] = imageData.data;
+
+                    
+
+                    if (r + g + b > 100) { // Skip very dark pixels
+
+                        dominos.push({
+
+                            x: x,
+
+                            y: y,
+
+                            width: 15,
+
+                            height: 30,
+
+                            angle: 0,
+
+                            falling: false,
+
+                            color: `rgb(${r}, ${g}, ${b})`
+
+                        });
+
+                    }
+
+                }
+
+            }
+
+            
+
+            drawDominos(ctx);
+
+        }
+
+        function startDominoFall() {
+
+            if (dominos.length === 0) return;
+
+            
+
+            const canvas = document.getElementById('dominos-canvas');
+
+            const ctx = canvas.getContext('2d');
+
+            
+
+            // Start falling from first domino
+
+            let fallIndex = 0;
+
+            
+
+            function fall() {
+
+                if (fallIndex < dominos.length) {
+
+                    dominos[fallIndex].falling = true;
+
+                    fallIndex++;
+
+                    
+
+                    drawDominos(ctx);
+
+                    setTimeout(fall, 50);
+
+                }
+
+            }
+
+            
+
+            fall();
+
+        }
+
+        function drawDominos(ctx) {
+
+            const canvas = document.getElementById('dominos-canvas');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            
+
+            dominos.forEach(domino => {
+
+                ctx.save();
+
+                ctx.translate(domino.x + domino.width/2, domino.y + domino.height/2);
+
+                ctx.rotate(domino.falling ? Math.PI/3 : 0);
+
+                
+
+                ctx.fillStyle = domino.color;
+
+                ctx.fillRect(-domino.width/2, -domino.height/2, domino.width, domino.height);
+
+                
+
+                ctx.strokeStyle = '#000';
+
+                ctx.strokeRect(-domino.width/2, -domino.height/2, domino.width, domino.height);
+
+                
+
+                ctx.restore();
+
+            });
+
+        }
+
+        // Chess Game
+
+        let chessBoard = [];
+
+        let selectedSquare = null;
+
+        let currentPlayer = 'white';
+
+        let gameEnded = false;
+
+        function initChess() {
+
+            setupChessBoard();
+
+            drawChessBoard();
+
+        }
+
+        function setupChessBoard() {
+
+            // Initialize empty board
+
+            chessBoard = Array(8).fill().map(() => Array(8).fill(null));
+
+            
+
+            // Setup pieces
+
+            const pieces = {
+
+                'r': '♜', 'n': '♞', 'b': '♝', 'q': '♛', 'k': '♚', 'p': '♟',
+
+                'R': '♖', 'N': '♘', 'B': '♗', 'Q': '♕', 'K': '♔', 'P': '♙'
+
+            };
+
+            
+
+            // Black pieces
+
+            chessBoard[0] = ['r','n','b','q','k','b','n','r'];
+
+            chessBoard[1] = Array(8).fill('p');
+
+            
+
+            // White pieces
+
+            chessBoard[6] = Array(8).fill('P');
+
+            chessBoard[7] = ['R','N','B','Q','K','B','N','R'];
+
+        }
+
+        function drawChessBoard() {
+
+            const boardElement = document.getElementById('chess-board');
+
+            boardElement.innerHTML = '';
+
+            
+
+            for (let row = 0; row < 8; row++) {
+
+                for (let col = 0; col < 8; col++) {
+
+                    const square = document.createElement('div');
+
+                    square.className = `chess-square ${(row + col) % 2 === 0 ? 'white' : 'black'}`;
+
+                    square.dataset.row = row;
+
+                    square.dataset.col = col;
+
+                    
+
+                    const piece = chessBoard[row][col];
+
+                    if (piece) {
+
+                        const pieceSymbol = {
+
+                            'r': '♜', 'n': '♞', 'b': '♝', 'q': '♛', 'k': '♚', 'p': '♟',
+
+                            'R': '♖', 'N': '♘', 'B': '♗', 'Q': '♕', 'K': '♔', 'P': '♙'
+
+                        }[piece];
+
+                        square.textContent = pieceSymbol;
+
+                    }
+
+                    
+
+                    square.addEventListener('click', () => handleChessClick(row, col));
+
+                    boardElement.appendChild(square);
+
+                }
+
+            }
+
+        }
+
+        function handleChessClick(row, col) {
+
+            if (gameEnded) return;
+
+            
+
+            if (selectedSquare) {
+
+                // Try to move
+
+                if (isValidMove(selectedSquare.row, selectedSquare.col, row, col)) {
+
+                    makeMove(selectedSquare.row, selectedSquare.col, row, col);
+
+                    selectedSquare = null;
+
+                    currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+
+                    
+
+                    // Simple AI move for black
+
+                    if (currentPlayer === 'black') {
+
+                        setTimeout(() => makeAIMove(), 500);
+
+                    }
+
+                    
+
+                    updateGameStatus();
+
+                } else {
+
+                    selectedSquare = null;
+
+                }
+
+                drawChessBoard();
+
+            } else {
+
+                // Select piece
+
+                const piece = chessBoard[row][col];
+
+                if (piece && isPlayerPiece(piece, currentPlayer)) {
+
+                    selectedSquare = {row, col};
+
+                    drawChessBoard();
+
+                    document.querySelector(`[data-row="${row}"][data-col="${col}"]`).classList.add('selected');
+
+                }
+
+            }
+
+        }
+
+        function isPlayerPiece(piece, player) {
+
+            if (player === 'white') return piece === piece.toUpperCase();
+
+            return piece === piece.toLowerCase();
+
+        }
+
+        function isValidMove(fromRow, fromCol, toRow, toCol) {
+
+            if (toRow < 0 || toRow > 7 || toCol < 0 || toCol > 7) return false;
+
+            
+
+            const piece = chessBoard[fromRow][fromCol];
+
+            const target = chessBoard[toRow][toCol];
+
+            
+
+            // Can't capture own piece
+
+            if (target && isPlayerPiece(piece, currentPlayer) === isPlayerPiece(target, currentPlayer)) {
+
+                return false;
+
+            }
+
+            
+
+            // Simple movement rules (basic implementation)
+
+            const deltaRow = Math.abs(toRow - fromRow);
+
+            const deltaCol = Math.abs(toCol - fromCol);
+
+            
+
+            switch(piece.toLowerCase()) {
+
+                case 'p': 
+
+                    // Pawn movement
+
+                    if (piece === 'P') { // White pawn
+
+                        if (fromRow === 6 && toRow === 4 && fromCol === toCol && !target) return true;
+
+                        if (toRow === fromRow - 1 && fromCol === toCol && !target) return true;
+
+                        if (toRow === fromRow - 1 && Math.abs(toCol - fromCol) === 1 && target) return true;
+
+                    } else { // Black pawn
+
+                        if (fromRow === 1 && toRow === 3 && fromCol === toCol && !target) return true;
+
+                        if (toRow === fromRow + 1 && fromCol === toCol && !target) return true;
+
+                        if (toRow === fromRow + 1 && Math.abs(toCol - fromCol) === 1 && target) return true;
+
+                    }
+
+                    break;
+
+                case 'r': // Rook
+
+                    return (deltaRow === 0 || deltaCol === 0) && isPathClear(fromRow, fromCol, toRow, toCol);
+
+                case 'n': // Knight
+
+                    return (deltaRow === 2 && deltaCol === 1) || (deltaRow === 1 && deltaCol === 2);
+
+                case 'b': // Bishop
+
+                    return deltaRow === deltaCol && isPathClear(fromRow, fromCol, toRow, toCol);
+
+                case 'q': // Queen
+
+                    return (deltaRow === 0 || deltaCol === 0 || deltaRow === deltaCol) && isPathClear(fromRow, fromCol, toRow, toCol);
+
+                case 'k': // King
+
+                    return deltaRow <= 1 && deltaCol <= 1;
+
+            }
+
+            return false;
+
+        }
+
+        function isPathClear(fromRow, fromCol, toRow, toCol) {
+
+            const stepRow = toRow > fromRow ? 1 : toRow < fromRow ? -1 : 0;
+
+            const stepCol = toCol > fromCol ? 1 : toCol < fromCol ? -1 : 0;
+
+            
+
+            let row = fromRow + stepRow;
+
+            let col = fromCol + stepCol;
+
+            
+
+            while (row !== toRow || col !== toCol) {
+
+                if (chessBoard[row][col]) return false;
+
+                row += stepRow;
+
+                col += stepCol;
+
+            }
+
+            return true;
+
+        }
+
+        function makeMove(fromRow, fromCol, toRow, toCol) {
+
+            chessBoard[toRow][toCol] = chessBoard[fromRow][fromCol];
+
+            chessBoard[fromRow][fromCol] = null;
+
+        }
+
+        function makeAIMove() {
+
+            if (gameEnded) return;
+
+            
+
+            // Simple AI: find random valid move
+
+            const moves = [];
+
+            for (let row = 0; row < 8; row++) {
+
+                for (let col = 0; col < 8; col++) {
+
+                    const piece = chessBoard[row][col];
+
+                    if (piece && isPlayerPiece(piece, 'black')) {
+
+                        for (let toRow = 0; toRow < 8; toRow++) {
+
+                            for (let toCol = 0; toCol < 8; toCol++) {
+
+                                if (isValidMove(row, col, toRow, toCol)) {
+
+                                    moves.push({fromRow: row, fromCol: col, toRow, toCol});
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            
+
+            if (moves.length > 0) {
+
+                const move = moves[Math.floor(Math.random() * moves.length)];
+
+                makeMove(move.fromRow, move.fromCol, move.toRow, move.toCol);
+
+                currentPlayer = 'white';
+
+                drawChessBoard();
+
+                updateGameStatus();
+
+            }
+
+        }
+
+        function updateGameStatus() {
+
+            const status = document.getElementById('chess-status');
+
+            if (isCheckmate()) {
+
+                status.textContent = `Checkmate! ${currentPlayer === 'white' ? 'Black' : 'White'} wins!`;
+
+                gameEnded = true;
+
+            } else if (isCheck()) {
+
+                status.textContent = `${currentPlayer === 'white' ? 'White' : 'Black'} is in check!`;
+
+            } else {
+
+                status.textContent = `${currentPlayer === 'white' ? 'White' : 'Black'} to move`;
+
+            }
+
+        }
+
+        function isCheck() {
+
+            // Find king
+
+            let kingRow, kingCol;
+
+            for (let row = 0; row < 8; row++) {
+
+                for (let col = 0; col < 8; col++) {
+
+                    const piece = chessBoard[row][col];
+
+                    if (piece && piece.toLowerCase() === 'k' && isPlayerPiece(piece, currentPlayer)) {
+
+                        kingRow = row;
+
+                        kingCol = col;
+
+                        break;
+
+                    }
+
+                }
+
+            }
+
+            
+
+            // Check if any enemy piece can capture king
+
+            for (let row = 0; row < 8; row++) {
+
+                for (let col = 0; col < 8; col++) {
+
+                    const piece = chessBoard[row][col];
+
+                    if (piece && !isPlayerPiece(piece, currentPlayer)) {
+
+                        const originalPlayer = currentPlayer;
+
+                        currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+
+                        const canCapture = isValidMove(row, col, kingRow, kingCol);
+
+                        currentPlayer = originalPlayer;
+
+                        if (canCapture) return true;
+
+                    }
+
+                }
+
+            }
+
+            return false;
+
+        }
+
+        function isCheckmate() {
+
+            if (!isCheck()) return false;
+
+            
+
+            // Try all possible moves to see if check can be avoided
+
+            for (let fromRow = 0; fromRow < 8; fromRow++) {
+
+                for (let fromCol = 0; fromCol < 8; fromCol++) {
+
+                    const piece = chessBoard[fromRow][fromCol];
+
+                    if (piece && isPlayerPiece(piece, currentPlayer)) {
+
+                        for (let toRow = 0; toRow < 8; toRow++) {
+
+                            for (let toCol = 0; toCol < 8; toCol++) {
+
+                                if (isValidMove(fromRow, fromCol, toRow, toCol)) {
+
+                                    // Simulate move
+
+                                    const originalPiece = chessBoard[toRow][toCol];
+
+                                    chessBoard[toRow][toCol] = chessBoard[fromRow][fromCol];
+
+                                    chessBoard[fromRow][fromCol] = null;
+
+                                    
+
+                                    const stillInCheck = isCheck();
+
+                                    
+
+                                    // Undo move
+
+                                    chessBoard[fromRow][fromCol] = chessBoard[toRow][toCol];
+
+                                    chessBoard[toRow][toCol] = originalPiece;
+
+                                    
+
+                                    if (!stillInCheck) return false;
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            return true;
+
+        }
+
+    </script>
+
+</body>
+
+</html>
